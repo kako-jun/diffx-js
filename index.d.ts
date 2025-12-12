@@ -14,14 +14,6 @@ export interface JsDiffOptions {
   pathFilter?: string
   /** Output format */
   outputFormat?: string
-  /** Show unchanged values as well */
-  showUnchanged?: boolean
-  /** Show type information in output */
-  showTypes?: boolean
-  /** Enable memory optimization for large files */
-  useMemoryOptimization?: boolean
-  /** Batch size for memory optimization */
-  batchSize?: number
   /** Ignore whitespace differences */
   ignoreWhitespace?: boolean
   /** Ignore case differences */

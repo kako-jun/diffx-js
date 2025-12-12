@@ -1,6 +1,6 @@
 # diffx-js
 
-A Node.js wrapper for the `diffx` CLI tool.
+Node.js bindings for [diffx](https://github.com/kako-jun/diffx) - semantic diff for structured data (JSON, YAML, TOML, XML, INI, CSV). Powered by Rust via napi-rs for blazing fast performance.
 
 ## Installation
 
@@ -8,98 +8,126 @@ A Node.js wrapper for the `diffx` CLI tool.
 npm install diffx-js
 ```
 
-This package includes pre-compiled `diffx` binaries for all supported platforms (Linux x64, macOS x64/ARM64, Windows x64), enabling **completely offline installation** with no external downloads required.
-
 ### Supported Platforms
 
-- **Linux x64** - Intel/AMD 64-bit
-- **macOS x64** - Intel-based Macs
-- **macOS ARM64** - Apple Silicon Macs (M1/M2/M3)
-- **Windows x64** - 64-bit Windows
-
-The appropriate binary is automatically selected at runtime based on your system.
-
-**Note:** Due to bundling all platform binaries, this package is larger (~20MB) than typical npm packages but provides complete offline functionality.
+| Platform | Architecture |
+|----------|--------------|
+| Linux | x64 (glibc) |
+| Linux | x64 (musl/Alpine) |
+| Linux | ARM64 |
+| macOS | x64 (Intel) |
+| macOS | ARM64 (Apple Silicon) |
+| Windows | x64 |
 
 ## Usage
+
+### Basic Diff
 
 ```javascript
 const { diff } = require('diffx-js');
 
-// Compare two JavaScript objects
-const old = { name: "Alice", age: 30, city: "Tokyo" };
-const newObj = { name: "Alice", age: 31, country: "Japan" };
+const old = { name: "Alice", age: 30 };
+const newObj = { name: "Alice", age: 31, city: "Tokyo" };
 
-const result = diff(old, newObj);
+const results = diff(old, newObj);
 
-if (result.length === 0) {
-  console.log("No differences found.");
-} else {
-  console.log("Differences found:");
-  for (const change of result) {
-    console.log(`${change.diffType}: ${change.path}`);
-    if (change.oldValue !== undefined) {
-      console.log(`  Old: ${change.oldValue}`);
-    }
-    if (change.newValue !== undefined) {
-      console.log(`  New: ${change.newValue}`);
-    }
-  }
+for (const change of results) {
+  console.log(`${change.diffType}: ${change.path}`);
+  // Modified: age
+  // Added: city
 }
-
-// Compare with options
-const data1 = { 
-  values: [1.0001, 2.0002, 3.0003],
-  metadata: { timestamp: "2024-01-01" }
-};
-const data2 = { 
-  values: [1.0002, 2.0003, 3.0004],
-  metadata: { timestamp: "2024-01-02" }
-};
-
-const preciseResult = diff(data1, data2, {
-  epsilon: 0.001,
-  ignoreKeysRegex: "timestamp"
-});
-
-console.log(`Found ${preciseResult.length} significant differences`);
 ```
 
+### With Options
 
-### API Reference
+```javascript
+const results = diff(data1, data2, {
+  epsilon: 0.001,           // Tolerance for float comparison
+  arrayIdKey: 'id',         // Match array elements by ID
+  ignoreKeysRegex: 'timestamp|updatedAt',  // Ignore keys matching regex
+  pathFilter: 'user',       // Only show diffs in paths containing "user"
+  ignoreCase: true,         // Ignore case differences
+  ignoreWhitespace: true,   // Ignore whitespace differences
+});
+```
 
-#### `diff(old, new, options?)`
-- **old**: The old JavaScript object, array, or primitive value
-- **new**: The new JavaScript object, array, or primitive value  
-- **options**: Optional configuration object
-  - `epsilon`: Tolerance for floating-point comparisons (default: 0.0)
-  - `arrayIdKey`: Key to use for array element identification
-  - `ignoreKeysRegex`: Regex pattern for keys to ignore
-  - `pathFilter`: Only show differences in paths containing this string
-  - `outputFormat`: Output format ("diffx", "json", "yaml")
-  - `showUnchanged`: Show unchanged values as well
-  - `showTypes`: Show type information in output
-  - `ignoreWhitespace`: Ignore whitespace differences
-  - `ignoreCase`: Ignore case differences
-  - `briefMode`: Report only whether objects differ
-  - `quietMode`: Suppress normal output; return only results
+### Parsers
 
-#### Return Value
-Returns an array of `JsDiffResult` objects, each containing:
-- `diffType`: Type of difference ('Added', 'Removed', 'Modified', 'TypeChanged')  
-- `path`: Path to the changed element
-- `oldValue`: Old value (for Modified/TypeChanged/Removed)
-- `newValue`: New value (for Modified/TypeChanged/Added)
-- `value`: Value (for Removed differences)
+Parse various formats to JavaScript objects:
+
+```javascript
+const { parseJson, parseYaml, parseToml, parseCsv, parseIni, parseXml } = require('diffx-js');
+
+const jsonObj = parseJson('{"name": "Alice"}');
+const yamlObj = parseYaml('name: Alice\nage: 30');
+const tomlObj = parseToml('name = "Alice"');
+const csvArray = parseCsv('name,age\nAlice,30');
+const iniObj = parseIni('[user]\nname = Alice');
+const xmlObj = parseXml('<user><name>Alice</name></user>');
+```
+
+### Format Output
+
+```javascript
+const { diff, formatOutput } = require('diffx-js');
+
+const results = diff(old, newObj);
+console.log(formatOutput(results, 'json'));  // JSON format
+console.log(formatOutput(results, 'yaml'));  // YAML format
+console.log(formatOutput(results, 'diffx')); // diffx format
+```
+
+## API Reference
+
+### `diff(old, new, options?)`
+
+Compare two values and return differences.
+
+**Options:**
+| Option | Type | Description |
+|--------|------|-------------|
+| `epsilon` | number | Tolerance for floating-point comparisons |
+| `arrayIdKey` | string | Key to identify array elements |
+| `ignoreKeysRegex` | string | Regex pattern for keys to ignore |
+| `pathFilter` | string | Only show diffs in matching paths |
+| `outputFormat` | string | Output format ("diffx", "json", "yaml") |
+| `ignoreWhitespace` | boolean | Ignore whitespace differences |
+| `ignoreCase` | boolean | Ignore case differences |
+| `briefMode` | boolean | Report only whether objects differ |
+| `quietMode` | boolean | Suppress normal output |
+
+**Returns:** Array of `JsDiffResult`:
+```typescript
+interface JsDiffResult {
+  diffType: 'Added' | 'Removed' | 'Modified' | 'TypeChanged';
+  path: string;
+  oldValue?: any;   // For Modified/TypeChanged
+  newValue?: any;   // For Added/Modified/TypeChanged
+  value?: any;      // For Removed
+}
+```
+
+### Parsers
+
+- `parseJson(content: string): any`
+- `parseYaml(content: string): any`
+- `parseToml(content: string): any`
+- `parseCsv(content: string): any[]`
+- `parseIni(content: string): any`
+- `parseXml(content: string): any`
+
+### `formatOutput(results, format)`
+
+Format diff results as string. Format: "json", "yaml", or "diffx".
 
 ## Development
 
-To link for local development:
-
 ```bash
-npm link
+npm install     # Install dependencies
+npm run build   # Build native module
+npm test        # Run tests (51 tests)
 ```
 
 ## License
 
-This project is licensed under the MIT License.
+MIT

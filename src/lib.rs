@@ -25,18 +25,6 @@ pub struct JsDiffOptions {
     /// Output format
     pub output_format: Option<String>,
 
-    /// Show unchanged values as well
-    pub show_unchanged: Option<bool>,
-
-    /// Show type information in output
-    pub show_types: Option<bool>,
-
-    /// Enable memory optimization for large files
-    pub use_memory_optimization: Option<bool>,
-
-    /// Batch size for memory optimization
-    pub batch_size: Option<u32>,
-
     // diffx-specific options
     /// Ignore whitespace differences
     pub ignore_whitespace: Option<bool>,
@@ -258,22 +246,6 @@ fn build_diff_options(js_options: JsDiffOptions) -> Result<DiffOptions> {
         let format = OutputFormat::parse_format(&output_format)
             .map_err(|e| Error::new(Status::InvalidArg, format!("Invalid output format: {e}")))?;
         options.output_format = Some(format);
-    }
-
-    if let Some(show_unchanged) = js_options.show_unchanged {
-        options.show_unchanged = Some(show_unchanged);
-    }
-
-    if let Some(show_types) = js_options.show_types {
-        options.show_types = Some(show_types);
-    }
-
-    if let Some(use_memory_optimization) = js_options.use_memory_optimization {
-        options.use_memory_optimization = Some(use_memory_optimization);
-    }
-
-    if let Some(batch_size) = js_options.batch_size {
-        options.batch_size = Some(batch_size as usize);
     }
 
     // diffx-specific options

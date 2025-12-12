@@ -1,7 +1,7 @@
 {
   "name": "diffx-js",
-  "version": "0.6.0",
-  "description": "A Node.js wrapper for the diffx CLI tool - semantic diffing of JSON, YAML, TOML, XML, INI, and CSV files. Focuses on structural meaning rather than formatting.",
+  "version": "0.6.1",
+  "description": "Node.js bindings for diffx - semantic diffing of JSON, YAML, TOML, XML, INI, and CSV files. Powered by Rust for blazing fast performance.",
   "keywords": [
     "diff",
     "json",
@@ -10,7 +10,6 @@
     "xml",
     "ini",
     "csv",
-    "cli",
     "structured",
     "configuration",
     "semantic",
@@ -18,29 +17,30 @@
     "devops",
     "ci-cd",
     "automation",
-    "data-analysis"
+    "data-analysis",
+    "napi-rs",
+    "rust"
   ],
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "napi build --platform --release",
     "build:debug": "napi build --platform",
-    "test": "npm run build && cd tests && npm test",
-    "examples": "npm run build && npx tsx examples.ts",
-    "verify": "npm run build && node -e \"console.log(require('./index.js'))\"",
-    "prepublish": "npm run build",
-    "artifacts": "napi artifacts"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "prepublishOnly": "napi prepublish -t npm",
+    "artifacts": "napi artifacts",
+    "version": "napi version",
+    "prepare": "husky"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.0.0"
   },
   "files": [
     "index.js",
     "index.d.ts",
-    "*.node",
-    "README.md",
-    "examples.ts",
-    "test.js"
+    "*.node"
   ],
   "os": [
     "linux",
@@ -53,26 +53,45 @@
   ],
   "author": "kako-jun",
   "license": "MIT",
-  "homepage": "https://github.com/kako-jun/diffx",
+  "homepage": "https://github.com/kako-jun/diffx-js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kako-jun/diffx.git",
-    "directory": "diffx-js"
+    "url": "git+https://github.com/kako-jun/diffx-js.git"
   },
   "bugs": {
-    "url": "https://github.com/kako-jun/diffx/issues"
+    "url": "https://github.com/kako-jun/diffx-js/issues"
   },
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/kako-jun"
   },
   "devDependencies": {
-    "@napi-rs/cli": "^2.18.0"
+    "@napi-rs/cli": "^2.18.0",
+    "husky": "^9.1.7",
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "forceExit": true
   },
   "napi": {
     "name": "diffx-js",
     "triples": {
-      "defaults": true
+      "defaults": true,
+      "additional": [
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "aarch64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "aarch64-pc-windows-msvc"
+      ]
     }
   }
 }

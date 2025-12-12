@@ -1,10 +1,26 @@
-# NAPI build artifacts
+# Build artifacts
 *.node
 target/
+Cargo.lock
+
+# Node.js
 node_modules/
 npm-debug.log*
+package-lock.json
 
 # OS files
 .DS_Store
-Thumbs.db.claude/settings.local.json
+Thumbs.db
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code / Serena
+.claude/settings.local.json
 .serena/
+
+# MCP config (local)
+.mcp.json
