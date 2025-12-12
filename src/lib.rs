@@ -84,14 +84,14 @@ pub struct JsDiffResult {
 #[napi]
 pub fn diff(
     old: serde_json::Value,
-    new: serde_json::Value,
+    #[napi(ts_arg_type = "any")] new_value: serde_json::Value,
     options: Option<JsDiffOptions>,
 ) -> Result<Vec<JsDiffResult>> {
     // Convert options
     let rust_options = options.map(build_diff_options).transpose()?;
 
     // Perform diff
-    let results = core_diff(&old, &new, rust_options.as_ref())
+    let results = core_diff(&old, &new_value, rust_options.as_ref())
         .map_err(|e| Error::new(Status::GenericFailure, format!("Diff error: {e}")))?;
 
     // Convert results to JavaScript objects
