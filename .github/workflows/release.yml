@@ -21,11 +21,11 @@ jobs:
 
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            build: npm run build -- --target x86_64-unknown-linux-musl --use-napi-cross
+            build: npm run build -- --target x86_64-unknown-linux-musl --zig
 
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            build: npm run build -- --target aarch64-unknown-linux-gnu --use-napi-cross
+            build: npm run build -- --target aarch64-unknown-linux-gnu --zig
 
           - host: macos-latest
             target: x86_64-apple-darwin
@@ -54,6 +54,14 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.settings.target }}
+
+      - name: Install Zig
+        if: contains(matrix.settings.build, '--zig')
+        uses: goto-bus-stop/setup-zig@v2
+
+      - name: Install cargo-zigbuild
+        if: contains(matrix.settings.build, '--zig')
+        run: cargo install cargo-zigbuild
 
       - name: Install dependencies
         run: npm ci
