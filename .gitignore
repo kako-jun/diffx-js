@@ -24,3 +24,7 @@ Thumbs.db
 
 # MCP config (local)
 .mcp.json
+
+# napi-rs artifacts
+npm/
+artifacts/
