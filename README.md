@@ -1,5 +1,9 @@
 # diffx-js
 
+[![CI](https://github.com/kako-jun/diffx-js/actions/workflows/ci.yml/badge.svg)](https://github.com/kako-jun/diffx-js/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/diffx-js.svg)](https://www.npmjs.com/package/diffx-js)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Node.js bindings for [diffx](https://github.com/kako-jun/diffx) - semantic diff for structured data (JSON, YAML, TOML, XML, INI, CSV). Powered by Rust via napi-rs for blazing fast performance.
 
 ## Installation
