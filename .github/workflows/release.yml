@@ -111,9 +111,19 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release
+          # Map target names to napi-rs platform names
+          declare -A TARGET_MAP=(
+            ["x86_64-unknown-linux-gnu"]="linux-x64-gnu"
+            ["x86_64-unknown-linux-musl"]="linux-x64-musl"
+            ["aarch64-unknown-linux-gnu"]="linux-arm64-gnu"
+            ["x86_64-apple-darwin"]="darwin-x64"
+            ["aarch64-apple-darwin"]="darwin-arm64"
+            ["x86_64-pc-windows-msvc"]="win32-x64-msvc"
+          )
           for dir in artifacts/bindings-*/; do
             target=$(basename "$dir" | sed 's/bindings-//')
-            cp "$dir"*.node "release/diffx-js.${target}.node" 2>/dev/null || true
+            platform=${TARGET_MAP[$target]:-$target}
+            cp "$dir"*.node "release/diffx-js.${platform}.node" 2>/dev/null || true
           done
           ls -la release/
 
