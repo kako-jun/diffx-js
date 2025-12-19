@@ -28,3 +28,4 @@ Thumbs.db
 # napi-rs artifacts
 npm/
 artifacts/
+index.d.ts
