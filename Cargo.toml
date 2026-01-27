@@ -1,6 +1,6 @@
 [package]
 name = "diffx-js"
-version = "0.6.1"
+version = "0.7.0"
 edition = "2021"
 description = "JavaScript bindings for diffx - high-performance structured data comparison"
 license = "MIT"
@@ -12,7 +12,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # Core diffx functionality
-diffx-core = "0.6.1"
+diffx-core = "0.7"
 
 # NAPI-RS for Node.js bindings
 napi = { version = "2.2", default-features = false, features = ["napi8", "serde-json"] }
