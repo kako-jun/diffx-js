@@ -1,7 +1,7 @@
-# diffx-js
+# diffx
 
 [![CI](https://github.com/kako-jun/diffx-js/actions/workflows/ci.yml/badge.svg)](https://github.com/kako-jun/diffx-js/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/diffx-js.svg)](https://www.npmjs.com/package/diffx-js)
+[![npm](https://img.shields.io/npm/v/diffx.svg)](https://www.npmjs.com/package/diffx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Node.js bindings for [diffx](https://github.com/kako-jun/diffx) - semantic diff for structured data (JSON, YAML, TOML, XML, INI, CSV). Powered by Rust via napi-rs for blazing fast performance.
@@ -9,7 +9,7 @@ Node.js bindings for [diffx](https://github.com/kako-jun/diffx) - semantic diff 
 ## Installation
 
 ```bash
-npm install diffx-js
+npm install diffx
 ```
 
 ### Supported Platforms
@@ -28,7 +28,7 @@ npm install diffx-js
 ### Basic Diff
 
 ```javascript
-const { diff } = require('diffx-js');
+const { diff } = require('diffx');
 
 const old = { name: "Alice", age: 30 };
 const newObj = { name: "Alice", age: 31, city: "Tokyo" };
@@ -60,7 +60,7 @@ const results = diff(data1, data2, {
 Parse various formats to JavaScript objects:
 
 ```javascript
-const { parseJson, parseYaml, parseToml, parseCsv, parseIni, parseXml } = require('diffx-js');
+const { parseJson, parseYaml, parseToml, parseCsv, parseIni, parseXml } = require('diffx');
 
 const jsonObj = parseJson('{"name": "Alice"}');
 const yamlObj = parseYaml('name: Alice\nage: 30');
@@ -73,7 +73,7 @@ const xmlObj = parseXml('<user><name>Alice</name></user>');
 ### Format Output
 
 ```javascript
-const { diff, formatOutput } = require('diffx-js');
+const { diff, formatOutput } = require('diffx');
 
 const results = diff(old, newObj);
 console.log(formatOutput(results, 'json'));  // JSON format
