@@ -1,5 +1,5 @@
 {
-  "name": "diffx-js",
+  "name": "diffx",
   "version": "0.6.1",
   "description": "Node.js bindings for diffx - semantic diffing of JSON, YAML, TOML, XML, INI, and CSV files. Powered by Rust for blazing fast performance.",
   "keywords": [
