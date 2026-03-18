@@ -1,6 +1,6 @@
 [package]
 name = "diffx-js"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
 description = "JavaScript bindings for diffx - high-performance structured data comparison"
 license = "MIT"
