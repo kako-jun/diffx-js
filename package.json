@@ -1,5 +1,5 @@
 {
-  "name": "diffx",
+  "name": "diffx-js",
   "version": "0.7.1",
   "description": "Node.js bindings for diffx - semantic diffing of JSON, YAML, TOML, XML, INI, and CSV files. Powered by Rust for blazing fast performance.",
   "keywords": [
@@ -92,11 +92,11 @@
     ]
   },
   "optionalDependencies": {
-    "diffx-js-linux-x64-gnu": "0.6.1",
-    "diffx-js-linux-x64-musl": "0.6.1",
-    "diffx-js-linux-arm64-gnu": "0.6.1",
-    "diffx-js-darwin-x64": "0.6.1",
-    "diffx-js-darwin-arm64": "0.6.1",
-    "diffx-js-win32-x64-msvc": "0.6.1"
+    "diffx-linux-x64-gnu": "0.7.1",
+    "diffx-linux-x64-musl": "0.7.1",
+    "diffx-linux-arm64-gnu": "0.7.1",
+    "diffx-darwin-x64": "0.7.1",
+    "diffx-darwin-arm64": "0.7.1",
+    "diffx-win32-x64-msvc": "0.7.1"
   }
 }
